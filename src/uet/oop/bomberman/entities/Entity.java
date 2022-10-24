@@ -8,6 +8,14 @@ import javafx.scene.paint.Color;
 import uet.oop.bomberman.graphics.Sprite;
 
 public abstract class Entity {
+    public int getX() {
+        return x;
+    }
+
+    public int getY() {
+        return y;
+    }
+
     //Tọa độ X tính từ góc trái trên trong Canvas
     protected int x;
 

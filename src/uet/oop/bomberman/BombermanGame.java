@@ -9,23 +9,29 @@ import javafx.scene.canvas.GraphicsContext;
 import javafx.stage.Stage;
 import uet.oop.bomberman.entities.Bomber;
 import uet.oop.bomberman.entities.Entity;
-import uet.oop.bomberman.entities.Grass;
-import uet.oop.bomberman.entities.Wall;
 import uet.oop.bomberman.graphics.Sprite;
-
+import uet.oop.bomberman.utilities.Mapper;
+import java.io.IOException;
 import java.util.ArrayList;
 import java.util.List;
 
 public class BombermanGame extends Application {
     
-    public static final int WIDTH = 20;
-    public static final int HEIGHT = 15;
+    public static final int WIDTH = 31;
+    public static final int HEIGHT = 13;
     
     private GraphicsContext gc;
     private Canvas canvas;
-    private List<Entity> entities = new ArrayList<>();
-    private List<Entity> stillObjects = new ArrayList<>();
 
+    public static List<Entity> getEntities() {
+        return entities;
+    }
+    private static List<Entity> entities = new ArrayList<>();
+
+    public static List<Entity> getStillObjects() {
+        return stillObjects;
+    }
+    private static List<Entity> stillObjects = new ArrayList<>();
 
     public static void main(String[] args) {
         Application.launch(BombermanGame.class);
@@ -44,37 +50,34 @@ public class BombermanGame extends Application {
         // Tao scene
         Scene scene = new Scene(root);
 
-        // Them scene vao stage
-        stage.setScene(scene);
-        stage.show();
-
         AnimationTimer timer = new AnimationTimer() {
+
             @Override
             public void handle(long l) {
-                render();
                 update();
+                render();
             }
         };
         timer.start();
 
         createMap();
 
-        Entity bomberman = new Bomber(1, 1, Sprite.player_right.getFxImage());
-        entities.add(bomberman);
+        Bomber bomberman = (Bomber) entities.stream().filter(e -> e instanceof Bomber).findFirst().get();
+        scene.setOnKeyPressed(bomberman::moveControl);
+        scene.setOnKeyReleased(bomberman::OnKeyRelease);
+
+        // Them scene vao stage
+        stage.setScene(scene);
+        stage.show();
     }
 
     public void createMap() {
-        for (int i = 0; i < WIDTH; i++) {
-            for (int j = 0; j < HEIGHT; j++) {
-                Entity object;
-                if (j == 0 || j == HEIGHT - 1 || i == 0 || i == WIDTH - 1) {
-                    object = new Wall(i, j, Sprite.wall.getFxImage());
-                }
-                else {
-                    object = new Grass(i, j, Sprite.grass.getFxImage());
-                }
-                stillObjects.add(object);
-            }
+        try {
+            Mapper.readMap();
+            entities = Mapper.getMobile();
+            stillObjects = Mapper.getImmobile();
+        } catch (IOException e) {
+            System.out.println(e);
         }
     }
 
