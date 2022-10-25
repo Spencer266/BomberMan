@@ -38,7 +38,7 @@ public class Physics {
             if (e instanceof Grass || e instanceof Bomber) {
                 continue;
             }
-            if (Math.abs(curX - e.getX()) < Sprite.SCALED_SIZE-4 && Math.abs(curY - e.getY()) < Sprite.SCALED_SIZE-1) {
+            if (Math.abs(curX - e.getX()) < Sprite.SCALED_SIZE-5 && Math.abs(curY - e.getY()) < Sprite.SCALED_SIZE-1) {
                 return true;
             }
         }

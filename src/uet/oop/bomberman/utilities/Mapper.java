@@ -6,8 +6,6 @@ import uet.oop.bomberman.graphics.Sprite;
 import java.io.BufferedReader;
 import java.io.FileReader;
 import java.io.IOException;
-import java.net.URL;
-import java.security.SecureRandomParameters;
 import java.util.ArrayList;
 import java.util.List;
 
@@ -57,7 +55,7 @@ public class Mapper {
                         break;
                     case '1':
                         object = new Grass(i, row, Sprite.grass.getFxImage());
-                        mobile.add(new Ballon(i, row, Sprite.balloom_right1.getFxImage()));
+                        mobile.add(new Balloom(i, row, Sprite.balloom_right1.getFxImage()));
                         break;
                     default:
                         object = new Grass(i, row, Sprite.grass.getFxImage());
