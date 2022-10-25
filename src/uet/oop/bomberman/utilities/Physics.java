@@ -6,42 +6,38 @@ import uet.oop.bomberman.entities.Entity;
 import uet.oop.bomberman.entities.Grass;
 import uet.oop.bomberman.graphics.Sprite;
 
+import java.util.ArrayList;
 import java.util.List;
 
 public class Physics {
 
-    public static boolean detectCollision(int curX, int curY, int direction, int speed) {
-        boolean check = false;
-        List<Entity> still = BombermanGame.getStillObjects();
-        List<Entity> mobile = BombermanGame.getEntities();
+    private static final List<Entity> still = new ArrayList<>();
+    public static void updateObjects() {
+        still.clear();
+        still.addAll(BombermanGame.getStillObjects());
+        still.addAll(BombermanGame.getEntities());
+    }
+    public static Entity detectCollision(Entity entity, int direction, int speed) {
+        int curX = entity.getX();
+        int curY = entity.getY();
+
         switch (direction) {
-            case 1 -> {
-                curY -= speed;
-            }
-            case 2 -> {
-                curY += speed;
-            }
-            case 3 -> {
-                curX -= speed;
-            }
-            case 4 -> {
-                curX += speed;
+            case 1 -> curY -= speed;
+            case 2 -> curY += speed;
+            case 3 -> curX -= speed;
+            case 4 -> curX += speed;
+            default -> {
+                return null;
             }
         }
-        if (loopThrough(curX, curY, still)) return true;
-        if (loopThrough(curX, curY, mobile)) return true;
-        return check;
-    }
-
-    private static boolean loopThrough(int curX, int curY, List<Entity> objects) {
-        for (Entity e: objects) {
-            if (e instanceof Grass || e instanceof Bomber) {
+        for (Entity e: still) {
+            if (e instanceof Grass || e == entity) {
                 continue;
             }
-            if (Math.abs(curX - e.getX()) < Sprite.SCALED_SIZE-5 && Math.abs(curY - e.getY()) < Sprite.SCALED_SIZE-1) {
-                return true;
+            if (Math.abs(curX - e.getX()) < entity.getImgWidth() && Math.abs(curY - e.getY()) < Sprite.SCALED_SIZE-1) {
+                return e;
             }
         }
-        return false;
+        return null;
     }
 }

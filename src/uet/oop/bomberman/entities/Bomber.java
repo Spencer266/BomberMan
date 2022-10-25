@@ -3,6 +3,7 @@ package uet.oop.bomberman.entities;
 import javafx.scene.image.Image;
 import javafx.scene.input.KeyCode;
 import javafx.scene.input.KeyEvent;
+import uet.oop.bomberman.BombermanGame;
 import uet.oop.bomberman.graphics.Sprite;
 import uet.oop.bomberman.utilities.Animator;
 import uet.oop.bomberman.utilities.Physics;
@@ -12,7 +13,7 @@ import java.util.List;
 
 public class Bomber extends Entity {
     private Animator animator;
-    private int speed = Sprite.SCALED_SIZE/8;
+    private int speed = Sprite.SCALED_SIZE / 8;
     private int moving;
     private int limiter;
 
@@ -45,28 +46,29 @@ public class Bomber extends Entity {
         switch (key.getCode()) {
             case UP -> {
                 moving = 1;
-                if (!Physics.detectCollision(x, y, moving, speed)) {
+                if (Physics.detectCollision(this, moving, speed) == null) {
                     y -= speed;
                 }
             }
             case DOWN -> {
                 moving = 2;
-                if (!Physics.detectCollision(x, y, moving, speed)) {
+                if (Physics.detectCollision(this, moving, speed) == null) {
                     y += speed;
                 }
             }
             case LEFT -> {
                 moving = 3;
-                if (!Physics.detectCollision(x, y, moving, speed)) {
+                if (Physics.detectCollision(this, moving, speed) == null) {
                     x -= speed;
                 }
             }
             case RIGHT -> {
                 moving = 4;
-                if (!Physics.detectCollision(x, y, moving, speed)) {
+                if (Physics.detectCollision(this, moving, speed) == null) {
                     x += speed;
                 }
             }
+            case SPACE -> BombermanGame.addEffect(new Bomb((x + 5) / Sprite.SCALED_SIZE, (y + 5) / Sprite.SCALED_SIZE, Sprite.bomb.getFxImage()));
         }
     }
 

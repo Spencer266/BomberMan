@@ -11,8 +11,11 @@ import uet.oop.bomberman.entities.Bomber;
 import uet.oop.bomberman.entities.Entity;
 import uet.oop.bomberman.graphics.Sprite;
 import uet.oop.bomberman.utilities.Mapper;
+import uet.oop.bomberman.utilities.Physics;
+
 import java.io.IOException;
 import java.util.ArrayList;
+import java.util.ConcurrentModificationException;
 import java.util.List;
 
 public class BombermanGame extends Application {
@@ -23,22 +26,42 @@ public class BombermanGame extends Application {
     private GraphicsContext gc;
     private Canvas canvas;
 
+    private static List<Entity> entities = new ArrayList<>();
     public static List<Entity> getEntities() {
         return entities;
     }
-    private static List<Entity> entities = new ArrayList<>();
+    public static void addEntity(Entity entity) {
+        entities.add(entity);
+    }
+    public static void removeEntity(Entity entity) {
+        entities.remove(entity);
+    }
 
+    private static List<Entity> stillObjects = new ArrayList<>();
     public static List<Entity> getStillObjects() {
         return stillObjects;
     }
-    private static List<Entity> stillObjects = new ArrayList<>();
+    public static void removeStillObject(Entity object) {
+        stillObjects.remove(object);
+    }
+
+    private static List<Entity> effects = new ArrayList<>();
+    public static List<Entity> getEffects() {
+        return effects;
+    }
+    public static void addEffect(Entity effect) {
+        effects.add(effect);
+    }
+    public static void removeEffect(Entity effect) {
+        effects.remove(effect);
+    }
 
     public static void main(String[] args) {
         Application.launch(BombermanGame.class);
     }
 
     @Override
-    public void start(Stage stage) {
+    public void start(Stage stage) throws IOException {
         // Tao Canvas
         canvas = new Canvas(Sprite.SCALED_SIZE * WIDTH, Sprite.SCALED_SIZE * HEIGHT);
         gc = canvas.getGraphicsContext2D();
@@ -65,29 +88,31 @@ public class BombermanGame extends Application {
         Bomber bomberman = (Bomber) entities.stream().filter(e -> e instanceof Bomber).findFirst().get();
         scene.setOnKeyPressed(bomberman::moveControl);
         scene.setOnKeyReleased(bomberman::OnKeyRelease);
-
         // Them scene vao stage
         stage.setScene(scene);
         stage.show();
     }
 
-    public void createMap() {
-        try {
-            Mapper.readMap();
-            entities = Mapper.getMobile();
-            stillObjects = Mapper.getImmobile();
-        } catch (IOException e) {
-            System.out.println(e);
-        }
+    public void createMap() throws IOException {
+        Mapper.readMap();
+        entities = Mapper.getMobile();
+        stillObjects = Mapper.getImmobile();
+        Physics.updateObjects();
     }
 
     public void update() {
-        entities.forEach(Entity::update);
+        try {
+            entities.forEach(Entity::update);
+            effects.forEach(Entity::update);
+        } catch (ConcurrentModificationException c) {
+            gc.clearRect(0, 0, canvas.getWidth(), canvas.getHeight());
+        }
     }
 
     public void render() {
         gc.clearRect(0, 0, canvas.getWidth(), canvas.getHeight());
         stillObjects.forEach(g -> g.render(gc));
+        effects.forEach(e -> e.render(gc));
         entities.forEach(g -> g.render(gc));
     }
 }

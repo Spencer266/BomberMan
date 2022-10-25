@@ -62,15 +62,10 @@ public class Animator {
                         currentAnimation = animateDown;
                     }
                 }
-                case 3 -> {
-                    currentAnimation = animateLeft;
-                }
-                case 4 -> {
-                    currentAnimation = animateRight;
-                }
-                case 0 -> {
-                    f_index = 0;
-                }
+                case 3 -> currentAnimation = animateLeft;
+                case 4 -> currentAnimation = animateRight;
+                case 5 -> currentAnimation = destroyed;
+                case 0 -> f_index = 0;
             }
             option = inOption;
         }

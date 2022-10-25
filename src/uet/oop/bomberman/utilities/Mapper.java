@@ -10,8 +10,6 @@ import java.util.ArrayList;
 import java.util.List;
 
 public class Mapper {
-
-    private char[][] map = new char[50][50];
     private static int width;
     private static int height;
     private static int level;
@@ -43,23 +41,17 @@ public class Mapper {
             for (int i = 0; i < width; i++) {
                 Entity object;
                 switch (line.charAt(i)) {
-                    case '#':
-                        object = new Wall(i, row, Sprite.wall.getFxImage());
-                        break;
-                    case '*':
-                        object = new Brick(i, row, Sprite.brick.getFxImage());
-                        break;
-                    case 'p':
+                    case '#' -> object = new Wall(i, row, Sprite.wall.getFxImage());
+                    case '*' -> object = new Brick(i, row, Sprite.brick.getFxImage());
+                    case 'p' -> {
                         object = new Grass(i, row, Sprite.grass.getFxImage());
                         mobile.add(new Bomber(i, row, Sprite.player_right.getFxImage()));
-                        break;
-                    case '1':
+                    }
+                    case '1' -> {
                         object = new Grass(i, row, Sprite.grass.getFxImage());
                         mobile.add(new Balloom(i, row, Sprite.balloom_right1.getFxImage()));
-                        break;
-                    default:
-                        object = new Grass(i, row, Sprite.grass.getFxImage());
-                        break;
+                    }
+                    default -> object = new Grass(i, row, Sprite.grass.getFxImage());
                 }
                 immobile.add(object);
             }
