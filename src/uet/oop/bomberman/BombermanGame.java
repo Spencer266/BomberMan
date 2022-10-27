@@ -83,6 +83,7 @@ public class BombermanGame extends Application {
             public void handle(long l) {
                 update();
                 render();
+                Manager.cycle();
             }
         };
         timer.start();
@@ -105,19 +106,19 @@ public class BombermanGame extends Application {
     }
 
     public void update() {
-        entities.forEach(Entity::update);
-        effects.forEach(Entity::update);
+        try {
+            entities.forEach(Entity::update);
+            effects.forEach(Entity::update);
+            stillObjects.forEach(Entity::update);
+        } catch (ConcurrentModificationException c) {
+            gc.clearRect(0, 0, canvas.getWidth(), canvas.getHeight());
+        }
     }
 
     public void render() {
         gc.clearRect(0, 0, canvas.getWidth(), canvas.getHeight());
         stillObjects.forEach(g -> g.render(gc));
-        try {
-            effects.forEach(e -> e.render(gc));
-        } catch (ConcurrentModificationException ignored) {
-
-        }
+        effects.forEach(e -> e.render(gc));
         entities.forEach(g -> g.render(gc));
-        Manager.cycle();
     }
 }

@@ -28,8 +28,13 @@ public class Brick extends Entity implements Disposable {
 
     @Override
     public void render(GraphicsContext gc) {
+        gc.drawImage(img, x, y);
+    }
+
+    @Override
+    public void update() {
         if (isFlamed) {
-            if (limiter > 35) {
+            if (limiter > 100) {
                 img = animator.nextFrame(5);
                 limiter = 0;
             }
@@ -38,12 +43,6 @@ public class Brick extends Entity implements Disposable {
             }
             limiter++;
         }
-        gc.drawImage(img, x, y);
-    }
-
-    @Override
-    public void update() {
-
     }
 
     @Override

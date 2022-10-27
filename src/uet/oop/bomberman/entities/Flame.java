@@ -13,7 +13,7 @@ public class Flame extends Entity implements Disposable {
     private final int size;
     private int f_index;
     private int limiter;
-    private final int[] directions = new int[4];
+    private final int[] directions;
     private final ArrayList<Image> flameHorizontal = new ArrayList<>();
     private final ArrayList<Image> flameVertical = new ArrayList<>();
     private final ArrayList<Image> flameTop = new ArrayList<>();
@@ -25,6 +25,7 @@ public class Flame extends Entity implements Disposable {
     public Flame(int xUnit, int yUnit, Image img, int size) {
         super(xUnit, yUnit, img);
         this.size = size;
+        directions = new int[4];
         addMiddle();
         addTop();
         addBottom();
@@ -78,18 +79,15 @@ public class Flame extends Entity implements Disposable {
         Entity tmp;
         for (int d = 0; d < 4; d++) {
             for (int i = 1; i <= size; i++) {
-                tmp = Physics.detectCollision(this, d + 1, (int) getImgWidth());
-                if (tmp == null) {
-                    directions[d]++;
-                    continue;
-                }
+                tmp = Physics.detectCollision(this, d + 1, (int) getImgWidth() * i);
                 if (tmp instanceof Wall) {
                     break;
                 }
-                if (tmp instanceof Brick) {
-                    ((Brick) tmp).touchedFlame();
+                if (tmp instanceof Brick || tmp instanceof Enemy) {
+                    ((Disposable) tmp).touchedFlame();
                     break;
                 }
+                directions[d]++;
             }
         }
     }
@@ -129,11 +127,12 @@ public class Flame extends Entity implements Disposable {
 
     @Override
     public void update() {
-        if (limiter > 30) {
+        if (limiter > 100) {
             f_index++;
         }
         if (f_index > 2) {
             destroy();
+            f_index = 2;
         }
         limiter++;
     }
