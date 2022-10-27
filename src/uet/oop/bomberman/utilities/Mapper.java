@@ -23,10 +23,11 @@ public class Mapper {
         return immobile;
     }
 
-    private static List<Entity> mobile = new ArrayList<>();
-    private static List<Entity> immobile = new ArrayList<>();
+    private static final List<Entity> mobile = new ArrayList<>();
+    private static final List<Entity> immobile = new ArrayList<>();
     public static void readMap() throws IOException {
-
+        mobile.clear();
+        immobile.clear();
         FileReader file = new FileReader(filePath);
         BufferedReader buffer = new BufferedReader(file);
 
@@ -42,7 +43,10 @@ public class Mapper {
                 Entity object;
                 switch (line.charAt(i)) {
                     case '#' -> object = new Wall(i, row, Sprite.wall.getFxImage());
-                    case '*' -> object = new Brick(i, row, Sprite.brick.getFxImage());
+                    case '*' -> {
+                        immobile.add(new Grass(i, row, Sprite.grass.getFxImage()));
+                        object = new Brick(i, row, Sprite.brick.getFxImage());
+                    }
                     case 'p' -> {
                         object = new Grass(i, row, Sprite.grass.getFxImage());
                         mobile.add(new Bomber(i, row, Sprite.player_right.getFxImage()));

@@ -10,6 +10,7 @@ import javafx.stage.Stage;
 import uet.oop.bomberman.entities.Bomber;
 import uet.oop.bomberman.entities.Entity;
 import uet.oop.bomberman.graphics.Sprite;
+import uet.oop.bomberman.utilities.Manager;
 import uet.oop.bomberman.utilities.Mapper;
 import uet.oop.bomberman.utilities.Physics;
 
@@ -22,7 +23,10 @@ public class BombermanGame extends Application {
     
     public static final int WIDTH = 31;
     public static final int HEIGHT = 13;
-    
+
+    public GraphicsContext getGc() {
+        return gc;
+    }
     private GraphicsContext gc;
     private Canvas canvas;
 
@@ -101,18 +105,19 @@ public class BombermanGame extends Application {
     }
 
     public void update() {
-        try {
-            entities.forEach(Entity::update);
-            effects.forEach(Entity::update);
-        } catch (ConcurrentModificationException c) {
-            gc.clearRect(0, 0, canvas.getWidth(), canvas.getHeight());
-        }
+        entities.forEach(Entity::update);
+        effects.forEach(Entity::update);
     }
 
     public void render() {
         gc.clearRect(0, 0, canvas.getWidth(), canvas.getHeight());
         stillObjects.forEach(g -> g.render(gc));
-        effects.forEach(e -> e.render(gc));
+        try {
+            effects.forEach(e -> e.render(gc));
+        } catch (ConcurrentModificationException ignored) {
+
+        }
         entities.forEach(g -> g.render(gc));
+        Manager.cycle();
     }
 }

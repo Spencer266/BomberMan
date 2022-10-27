@@ -13,15 +13,16 @@ import java.util.List;
 
 public class Bomber extends Entity {
     private Animator animator;
-    private int speed = Sprite.SCALED_SIZE / 8;
+    private int speed;
     private int moving;
     private int limiter;
+    private int bombAmount;
+    private int bombSize;
 
     public Bomber(int x, int y, Image img) {
         super(x, y, img);
         init();
     }
-
     private void init() {
         animator = new Animator();
         animator.addAnimateUp(Sprite.player_up.getFxImage());
@@ -41,7 +42,21 @@ public class Bomber extends Entity {
         animator.addAnimateRight(Sprite.player_right_2.getFxImage());
         moving = 0;
         limiter = 0;
+        bombAmount = 1;
+        bombSize = 3;
+        speed = Sprite.SCALED_SIZE / 8;
     }
+
+    public void increaseBomb() {
+        bombAmount++;
+    }
+    public int getBombSize() {
+        return bombSize;
+    }
+    public void increaseBombSize() {
+        bombSize++;
+    }
+
     public void moveControl(KeyEvent key) {
         switch (key.getCode()) {
             case UP -> {
@@ -68,7 +83,12 @@ public class Bomber extends Entity {
                     x += speed;
                 }
             }
-            case SPACE -> BombermanGame.addEffect(new Bomb((x + 5) / Sprite.SCALED_SIZE, (y + 5) / Sprite.SCALED_SIZE, Sprite.bomb.getFxImage()));
+            case SPACE -> {
+                if (bombAmount > 0) {
+                    BombermanGame.addEffect(new Bomb((x + 5) / Sprite.SCALED_SIZE, (y + 5) / Sprite.SCALED_SIZE, Sprite.bomb.getFxImage(), this));
+                    bombAmount--;
+                }
+            }
         }
     }
 

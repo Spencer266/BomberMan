@@ -1,22 +1,23 @@
 package uet.oop.bomberman.entities;
 
 import javafx.scene.image.Image;
+import uet.oop.bomberman.BombermanGame;
 import uet.oop.bomberman.graphics.Sprite;
 import uet.oop.bomberman.utilities.Animator;
 import uet.oop.bomberman.utilities.Manager;
 import uet.oop.bomberman.utilities.Physics;
 
 public class Bomb extends Entity {
+    private final Bomber planter;
     private Animator animator;
     private int timer;
     private int limiter;
-    private boolean exploded;
     private boolean planted;
-    public Bomb(int xUnit, int yUnit, Image img) {
+    public Bomb(int xUnit, int yUnit, Image img, Bomber planter) {
         super(xUnit, yUnit, img);
         init();
+        this.planter = planter;
     }
-
     private void init() {
 
         animator = new Animator();
@@ -26,7 +27,6 @@ public class Bomb extends Entity {
 
         timer = 0;
         limiter = 0;
-        exploded = false;
         planted = false;
     }
 
@@ -38,11 +38,14 @@ public class Bomb extends Entity {
         if (!planted) {
             if (Physics.detectCollision(this, 4, 0) == null) {
                 planted = true;
-                Manager.plantBomb(this);
+                BombermanGame.removeEffect(this);
+                Manager.addEntity(this);
             }
         }
-        if (timer > 400) {
-            Manager.bombExploded(this);
+        if (timer > 200) {
+            Manager.addEntity(new Flame(x / Sprite.SCALED_SIZE, y / Sprite.SCALED_SIZE, Sprite.bomb_exploded.getFxImage(), planter.getBombSize()));
+            planter.increaseBomb();
+            Manager.removeEntity(this);
         }
         if (limiter > 10) {
             animate();

@@ -4,7 +4,7 @@ import javafx.scene.image.Image;
 import uet.oop.bomberman.utilities.Animator;
 import uet.oop.bomberman.utilities.Physics;
 
-public abstract class Enemy extends Entity {
+public abstract class Enemy extends Entity implements Disposable {
     int speed;
     int moving;
     int limiter;

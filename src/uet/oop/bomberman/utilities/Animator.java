@@ -12,6 +12,11 @@ public class Animator {
     private ArrayList<Image> destroyed = new ArrayList<>();
     private ArrayList<Image> currentAnimation;
     private boolean simple;
+
+    public boolean isEnd() {
+        return end;
+    }
+    private boolean end;
     private int option;
     private int f_index;
 
@@ -19,6 +24,15 @@ public class Animator {
         option = 4;
         f_index = 0;
         simple = false;
+        end = false;
+        currentAnimation = animateRight;
+    }
+
+    public Animator(boolean isSimple) {
+        option = 4;
+        f_index = 0;
+        simple = isSimple;
+        end = false;
         currentAnimation = animateRight;
     }
     public void addAnimateUp(Image frame) {
@@ -39,10 +53,6 @@ public class Animator {
 
     public void addAnimateDestroyed(Image frame) {
         destroyed.add(frame);
-    }
-
-    public void setSimple(boolean simple) {
-        this.simple = simple;
     }
     public Image nextFrame(int inOption) {
         Image next;
@@ -71,6 +81,9 @@ public class Animator {
         }
         next = currentAnimation.get(f_index);
         f_index = (f_index + 1) % currentAnimation.size();
+        if (inOption == 5 && f_index == currentAnimation.size() - 1) {
+            end = true;
+        }
         return next;
     }
 }

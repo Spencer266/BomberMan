@@ -10,7 +10,6 @@ import java.util.ArrayList;
 import java.util.List;
 
 public class Physics {
-
     private static final List<Entity> still = new ArrayList<>();
     public static void updateObjects() {
         still.clear();
@@ -26,9 +25,6 @@ public class Physics {
             case 2 -> curY += speed;
             case 3 -> curX -= speed;
             case 4 -> curX += speed;
-            default -> {
-                return null;
-            }
         }
         for (Entity e: still) {
             if (e instanceof Grass || e == entity) {
