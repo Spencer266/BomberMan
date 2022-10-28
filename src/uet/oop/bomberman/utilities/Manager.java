@@ -10,6 +10,9 @@ public class Manager {
     private static final List<Entity> entityToRemove = new ArrayList<>();
     private static final List<Entity> stillToRemove = new ArrayList<>();
     private static final List<Entity> entityToAdd = new ArrayList<>();
+    private static final List<Entity> effectToRemove = new ArrayList<>();
+    private static final List<Entity> effectToAdd = new ArrayList<>();
+
     public static void removeEntity(Entity entity) {
         entityToRemove.add(entity);
     }
@@ -22,26 +25,37 @@ public class Manager {
         entityToAdd.add(entity);
     }
 
+    public static void removeEffects(Entity entity) {
+        effectToRemove.add(entity);
+    }
+
+    public static void addEffects(Entity entity) {
+        effectToAdd.add(entity);
+    }
     public static void cycle() {
         if (!entityToRemove.isEmpty()) {
-            for (Entity e: entityToRemove) {
-                BombermanGame.removeEntity(e);
-            }
+            BombermanGame.removeEntities(entityToRemove);
             entityToRemove.clear();
         }
 
         if (!stillToRemove.isEmpty()) {
-            for (Entity e : stillToRemove) {
-                BombermanGame.removeStillObject(e);
-            }
+            BombermanGame.removeStillObjects(stillToRemove);
             stillToRemove.clear();
         }
 
         if (!entityToAdd.isEmpty()) {
-            for (Entity e: entityToAdd) {
-                BombermanGame.addEntity(e);
-            }
+            BombermanGame.addEntities(entityToAdd);
             entityToAdd.clear();
+        }
+
+        if (!effectToRemove.isEmpty()) {
+            BombermanGame.removeEffects(effectToRemove);
+            effectToRemove.clear();
+        }
+
+        if (!effectToAdd.isEmpty()) {
+            BombermanGame.addEffects(effectToAdd);
+            effectToAdd.clear();
         }
 
         Physics.updateObjects();

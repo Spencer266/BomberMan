@@ -16,7 +16,6 @@ import uet.oop.bomberman.utilities.Physics;
 
 import java.io.IOException;
 import java.util.ArrayList;
-import java.util.ConcurrentModificationException;
 import java.util.List;
 
 public class BombermanGame extends Application {
@@ -34,30 +33,30 @@ public class BombermanGame extends Application {
     public static List<Entity> getEntities() {
         return entities;
     }
-    public static void addEntity(Entity entity) {
-        entities.add(entity);
+    public static void addEntities(List<Entity> le) {
+        entities.addAll(le);
     }
-    public static void removeEntity(Entity entity) {
-        entities.remove(entity);
+    public static void removeEntities(List<Entity> le) {
+        entities.removeAll(le);
     }
 
     private static List<Entity> stillObjects = new ArrayList<>();
     public static List<Entity> getStillObjects() {
         return stillObjects;
     }
-    public static void removeStillObject(Entity object) {
-        stillObjects.remove(object);
+    public static void removeStillObjects(List<Entity> lo) {
+        stillObjects.removeAll(lo);
     }
 
     private static List<Entity> effects = new ArrayList<>();
     public static List<Entity> getEffects() {
         return effects;
     }
-    public static void addEffect(Entity effect) {
-        effects.add(effect);
+    public static void addEffects(List<Entity> le) {
+        effects.addAll(le);
     }
-    public static void removeEffect(Entity effect) {
-        effects.remove(effect);
+    public static void removeEffects(List<Entity> le) {
+        effects.removeAll(le);
     }
 
     public static void main(String[] args) {
@@ -106,13 +105,9 @@ public class BombermanGame extends Application {
     }
 
     public void update() {
-        try {
-            entities.forEach(Entity::update);
-            effects.forEach(Entity::update);
-            stillObjects.forEach(Entity::update);
-        } catch (ConcurrentModificationException c) {
-            gc.clearRect(0, 0, canvas.getWidth(), canvas.getHeight());
-        }
+        stillObjects.forEach(Entity::update);
+        effects.forEach(Entity::update);
+        entities.forEach(Entity::update);
     }
 
     public void render() {

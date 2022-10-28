@@ -5,13 +5,13 @@ import javafx.scene.image.Image;
 import java.util.ArrayList;
 
 public class Animator {
-    private ArrayList<Image> animateUp = new ArrayList<>();
-    private ArrayList<Image> animateDown = new ArrayList<>();
-    private ArrayList<Image> animateLeft = new ArrayList<>();
-    private ArrayList<Image> animateRight = new ArrayList<>();
-    private ArrayList<Image> destroyed = new ArrayList<>();
+    private final ArrayList<Image> animateUp = new ArrayList<>();
+    private final ArrayList<Image> animateDown = new ArrayList<>();
+    private final ArrayList<Image> animateLeft = new ArrayList<>();
+    private final ArrayList<Image> animateRight = new ArrayList<>();
+    private final ArrayList<Image> destroyed = new ArrayList<>();
     private ArrayList<Image> currentAnimation;
-    private boolean simple;
+    private final boolean simple;
 
     public boolean isEnd() {
         return end;
@@ -80,10 +80,10 @@ public class Animator {
             option = inOption;
         }
         next = currentAnimation.get(f_index);
-        f_index = (f_index + 1) % currentAnimation.size();
         if (inOption == 5 && f_index == currentAnimation.size() - 1) {
             end = true;
         }
+        f_index = (f_index + 1) % currentAnimation.size();
         return next;
     }
 }

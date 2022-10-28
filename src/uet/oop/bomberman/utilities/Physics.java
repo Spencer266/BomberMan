@@ -1,7 +1,6 @@
 package uet.oop.bomberman.utilities;
 
 import uet.oop.bomberman.BombermanGame;
-import uet.oop.bomberman.entities.Bomber;
 import uet.oop.bomberman.entities.Entity;
 import uet.oop.bomberman.entities.Grass;
 import uet.oop.bomberman.graphics.Sprite;

@@ -38,7 +38,7 @@ public class Bomb extends Entity {
         if (!planted) {
             if (Physics.detectCollision(this, 4, 0) == null) {
                 planted = true;
-                BombermanGame.removeEffect(this);
+                Manager.removeEffects(this);
                 Manager.addEntity(this);
             }
         }

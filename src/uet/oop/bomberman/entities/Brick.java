@@ -2,11 +2,9 @@ package uet.oop.bomberman.entities;
 
 import javafx.scene.canvas.GraphicsContext;
 import javafx.scene.image.Image;
-import uet.oop.bomberman.BombermanGame;
 import uet.oop.bomberman.graphics.Sprite;
 import uet.oop.bomberman.utilities.Animator;
 import uet.oop.bomberman.utilities.Manager;
-import uet.oop.bomberman.utilities.Physics;
 
 public class Brick extends Entity implements Disposable {
     private Animator animator;
@@ -34,7 +32,7 @@ public class Brick extends Entity implements Disposable {
     @Override
     public void update() {
         if (isFlamed) {
-            if (limiter > 100) {
+            if (limiter > 12) {
                 img = animator.nextFrame(5);
                 limiter = 0;
             }

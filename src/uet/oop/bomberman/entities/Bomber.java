@@ -3,9 +3,9 @@ package uet.oop.bomberman.entities;
 import javafx.scene.image.Image;
 import javafx.scene.input.KeyCode;
 import javafx.scene.input.KeyEvent;
-import uet.oop.bomberman.BombermanGame;
 import uet.oop.bomberman.graphics.Sprite;
 import uet.oop.bomberman.utilities.Animator;
+import uet.oop.bomberman.utilities.Manager;
 import uet.oop.bomberman.utilities.Physics;
 
 import java.util.ArrayList;
@@ -85,7 +85,7 @@ public class Bomber extends Entity {
             }
             case SPACE -> {
                 if (bombAmount > 0) {
-                    BombermanGame.addEffect(new Bomb((x + 5) / Sprite.SCALED_SIZE, (y + 5) / Sprite.SCALED_SIZE, Sprite.bomb.getFxImage(), this));
+                    Manager.addEffects(new Bomb((x + 5) / Sprite.SCALED_SIZE, (y + 5) / Sprite.SCALED_SIZE, Sprite.bomb.getFxImage(), this));
                     bombAmount--;
                 }
             }

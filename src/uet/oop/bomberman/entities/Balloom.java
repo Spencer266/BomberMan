@@ -1,9 +1,9 @@
 package uet.oop.bomberman.entities;
 
 import javafx.scene.image.Image;
-import uet.oop.bomberman.BombermanGame;
 import uet.oop.bomberman.graphics.Sprite;
 import uet.oop.bomberman.utilities.Animator;
+import uet.oop.bomberman.utilities.Manager;
 import uet.oop.bomberman.utilities.Physics;
 
 import java.util.Random;
@@ -69,7 +69,6 @@ public class Balloom extends Enemy {
 
     @Override
     public void destroy() {
-        BombermanGame.removeEntity(this);
-        Physics.updateObjects();
+        Manager.removeEntity(this);
     }
 }
