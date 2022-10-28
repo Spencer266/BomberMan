@@ -1,14 +1,18 @@
-package uet.oop.bomberman.entities;
+package uet.oop.bomberman.entities.immobile;
 
 import javafx.scene.canvas.GraphicsContext;
 import javafx.scene.image.Image;
+import uet.oop.bomberman.entities.Bomber;
+import uet.oop.bomberman.entities.Disposable;
+import uet.oop.bomberman.entities.Entity;
+import uet.oop.bomberman.entities.enemies.Enemy;
 import uet.oop.bomberman.graphics.Sprite;
 import uet.oop.bomberman.utilities.Manager;
 import uet.oop.bomberman.utilities.Physics;
 
 import java.util.ArrayList;
 
-public class Flame extends Entity implements Disposable {
+public class Flame extends Immobile implements Disposable {
     private final int size;
     private int f_index;
     private int limiter;
@@ -82,9 +86,12 @@ public class Flame extends Entity implements Disposable {
                 if (tmp instanceof Wall) {
                     break;
                 }
-                if (tmp instanceof Brick || tmp instanceof Enemy) {
-                    ((Disposable) tmp).touchedFlame();
+                if (tmp instanceof Brick) {
+                    ((Brick) tmp).touchedFlame();
                     break;
+                }
+                if (tmp instanceof Enemy || tmp instanceof Bomber) {
+                    ((Disposable) tmp).touchedFlame();
                 }
                 directions[d]++;
             }
@@ -126,12 +133,12 @@ public class Flame extends Entity implements Disposable {
 
     @Override
     public void update() {
-        if (limiter > 14) {
+        if (limiter > 5) {
             f_index++;
-        }
-        if (f_index > 2) {
-            destroy();
-            f_index = 2;
+            if (f_index > 2) {
+                destroy();
+            }
+            limiter = 0;
         }
         limiter++;
     }

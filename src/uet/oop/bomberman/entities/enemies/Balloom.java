@@ -1,9 +1,10 @@
-package uet.oop.bomberman.entities;
+package uet.oop.bomberman.entities.enemies;
 
 import javafx.scene.image.Image;
+import uet.oop.bomberman.entities.Bomber;
+import uet.oop.bomberman.entities.Entity;
 import uet.oop.bomberman.graphics.Sprite;
 import uet.oop.bomberman.utilities.Animator;
-import uet.oop.bomberman.utilities.Manager;
 import uet.oop.bomberman.utilities.Physics;
 
 import java.util.Random;
@@ -46,14 +47,18 @@ public class Balloom extends Enemy {
             }
         } else {
             if (timer > 100) {
-                while (Physics.detectCollision(this, moving, speed) != null) {
+                Entity tmp;
+                while ((tmp = Physics.detectCollision(this, moving, speed)) != null) {
+                    if (tmp instanceof Bomber) {
+                        continue;
+                    }
                     moving = this.randomGenerator.nextInt(4) + 1;
                 }
                 timer = this.randomGenerator.nextInt(200);
             }
             moveControl();
         }
-        if (limiter > 15) {
+        if (limiter > f_switch) {
             animate();
             limiter = 0;
         }
@@ -64,11 +69,6 @@ public class Balloom extends Enemy {
     @Override
     public void touchedFlame() {
         moving = 5;
-        img = animator.nextFrame(moving);
-    }
-
-    @Override
-    public void destroy() {
-        Manager.removeEntity(this);
+        animateDeath();
     }
 }

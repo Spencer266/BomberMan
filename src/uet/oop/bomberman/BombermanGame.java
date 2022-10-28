@@ -81,8 +81,8 @@ public class BombermanGame extends Application {
             @Override
             public void handle(long l) {
                 update();
-                render();
                 Manager.cycle();
+                render();
             }
         };
         timer.start();
@@ -99,8 +99,8 @@ public class BombermanGame extends Application {
 
     public void createMap() throws IOException {
         Mapper.readMap();
-        entities = Mapper.getMobile();
-        stillObjects = Mapper.getImmobile();
+        entities = Mapper.mobile;
+        stillObjects = Mapper.immobile;
         Physics.updateObjects();
     }
 

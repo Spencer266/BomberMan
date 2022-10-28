@@ -1,13 +1,13 @@
-package uet.oop.bomberman.entities;
+package uet.oop.bomberman.entities.immobile;
 
 import javafx.scene.image.Image;
-import uet.oop.bomberman.BombermanGame;
+import uet.oop.bomberman.entities.Bomber;
 import uet.oop.bomberman.graphics.Sprite;
 import uet.oop.bomberman.utilities.Animator;
 import uet.oop.bomberman.utilities.Manager;
 import uet.oop.bomberman.utilities.Physics;
 
-public class Bomb extends Entity {
+public class Bomb extends Immobile {
     private final Bomber planter;
     private Animator animator;
     private int timer;
