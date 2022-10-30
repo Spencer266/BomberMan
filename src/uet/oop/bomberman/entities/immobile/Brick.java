@@ -2,7 +2,6 @@ package uet.oop.bomberman.entities.immobile;
 
 import javafx.scene.image.Image;
 import uet.oop.bomberman.entities.Disposable;
-import uet.oop.bomberman.entities.immobile.Immobile;
 import uet.oop.bomberman.entities.items.Item;
 import uet.oop.bomberman.graphics.Sprite;
 import uet.oop.bomberman.utilities.Animator;
@@ -12,7 +11,7 @@ public class Brick extends Immobile implements Disposable {
     private Animator animator;
     private int limiter;
     private boolean isFlamed;
-    private Item item;
+    private final Item item;
     public Brick(int x, int y, Image img) {
         super(x, y, img);
         isFlamed = false;

@@ -7,6 +7,7 @@ import uet.oop.bomberman.graphics.Sprite;
 import uet.oop.bomberman.utilities.Animator;
 import uet.oop.bomberman.utilities.Manager;
 import uet.oop.bomberman.utilities.Physics;
+import uet.oop.bomberman.utilities.Sound;
 
 public class Bomb extends Immobile implements Disposable {
     private final Bomber planter;
@@ -62,12 +63,12 @@ public class Bomb extends Immobile implements Disposable {
     private void triggered() {
         Manager.addEntity(new Flame(x / Sprite.SCALED_SIZE, y / Sprite.SCALED_SIZE, Sprite.bomb_exploded.getFxImage(), planter.getBombSize()));
         planter.increaseBomb();
+        Sound.play("explode");
     }
 
     @Override
     public void touchedFlame() {
-        triggered();
-        destroy();
+        timer = 190;
     }
 
     @Override

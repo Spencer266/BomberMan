@@ -12,7 +12,6 @@ public abstract class Item extends Entity implements Disposable {
     }
 
     public void unlock() {
-        Manager.removeEffects(this);
         Manager.addEntity(this);
     }
 

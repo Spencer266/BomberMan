@@ -1,12 +1,10 @@
 package uet.oop.bomberman.entities.enemies;
 
 import javafx.scene.image.Image;
-import uet.oop.bomberman.entities.Bomber;
 import uet.oop.bomberman.entities.Disposable;
 import uet.oop.bomberman.entities.Entity;
 import uet.oop.bomberman.utilities.Animator;
 import uet.oop.bomberman.utilities.Manager;
-import uet.oop.bomberman.utilities.Physics;
 
 public abstract class Enemy extends Entity implements Disposable {
     int speed;
@@ -24,10 +22,6 @@ public abstract class Enemy extends Entity implements Disposable {
     abstract void init();
 
     public void moveControl() {
-        Entity tmp = Physics.detectCollision(this, moving, speed);
-        if (tmp != null && !(tmp instanceof Bomber)) {
-            return;
-        }
         switch (moving) {
             case 1 -> y -= speed;
             case 2 -> y += speed;
@@ -42,6 +36,7 @@ public abstract class Enemy extends Entity implements Disposable {
     }
 
     void animateDeath() {
+        moving = 5;
         img = animator.nextFrame(moving);
         f_switch = 90;
     }

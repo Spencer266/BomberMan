@@ -46,8 +46,11 @@ public class Balloom extends Enemy {
                 destroy();
             }
         } else {
+            Entity tmp = Physics.detectCollision(this, moving, speed);
+            if (tmp == null || tmp instanceof Bomber) {
+                moveControl();
+            }
             if (timer > 100) {
-                Entity tmp;
                 while ((tmp = Physics.detectCollision(this, moving, speed)) != null) {
                     if (tmp instanceof Bomber) {
                         break;
@@ -56,7 +59,6 @@ public class Balloom extends Enemy {
                 }
                 timer = this.randomGenerator.nextInt(100);
             }
-            moveControl();
         }
         if (limiter > f_switch) {
             animate();
@@ -68,7 +70,6 @@ public class Balloom extends Enemy {
 
     @Override
     public void touchedFlame() {
-        moving = 5;
         animateDeath();
     }
 }

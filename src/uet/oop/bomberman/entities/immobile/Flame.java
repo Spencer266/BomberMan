@@ -5,7 +5,6 @@ import javafx.scene.image.Image;
 import uet.oop.bomberman.entities.Bomber;
 import uet.oop.bomberman.entities.Disposable;
 import uet.oop.bomberman.entities.Entity;
-import uet.oop.bomberman.entities.enemies.Enemy;
 import uet.oop.bomberman.graphics.Sprite;
 import uet.oop.bomberman.utilities.Manager;
 import uet.oop.bomberman.utilities.Physics;
@@ -94,7 +93,7 @@ public class Flame extends Immobile implements Disposable {
                     ((Brick) tmp).touchedFlame();
                     break;
                 }
-                if (tmp instanceof Enemy || tmp instanceof Bomber) {
+                if (tmp instanceof Disposable) {
                     ((Disposable) tmp).touchedFlame();
                 }
                 directions[d]++;

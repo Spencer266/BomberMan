@@ -3,6 +3,7 @@ package uet.oop.bomberman.entities;
 import javafx.scene.image.Image;
 import javafx.scene.input.KeyCode;
 import javafx.scene.input.KeyEvent;
+import uet.oop.bomberman.BombermanGame;
 import uet.oop.bomberman.entities.enemies.Enemy;
 import uet.oop.bomberman.entities.immobile.Bomb;
 import uet.oop.bomberman.entities.immobile.Immobile;
@@ -11,19 +12,21 @@ import uet.oop.bomberman.graphics.Sprite;
 import uet.oop.bomberman.utilities.Animator;
 import uet.oop.bomberman.utilities.Manager;
 import uet.oop.bomberman.utilities.Physics;
+import uet.oop.bomberman.utilities.Sound;
 
 import java.util.ArrayList;
 import java.util.List;
 
 public class Bomber extends Entity implements Disposable {
     private Animator animator;
-    private static int countBombers;
+    private static int countBombers = 0;
     private int speed;
     private int moving;
     private int limiter;
     private int f_switch;
     private int bombAmount;
     private int bombSize;
+    private boolean flamePass;
 
     public Bomber(int x, int y, Image img) {
         super(x, y, img);
@@ -52,16 +55,19 @@ public class Bomber extends Entity implements Disposable {
         animator.addAnimateDestroyed(Sprite.player_dead2.getFxImage());
         animator.addAnimateDestroyed(Sprite.player_dead3.getFxImage());
 
-        f_switch = 8;
+        f_switch = 6;
         moving = 0;
         limiter = 0;
         bombAmount = 1;
         bombSize = 2;
         speed = 4;
+        flamePass = false;
     }
     public static int getCountBombers() {
         return countBombers;
     }
+    public static void resetCountBombers() { countBombers = 0; }
+
     public void increaseSpeed() {
         speed++;
     }
@@ -73,6 +79,9 @@ public class Bomber extends Entity implements Disposable {
     }
     public void increaseBombSize() {
         bombSize++;
+    }
+    public void flamePassAllowed() {
+        flamePass = true;
     }
 
     public void moveControl(KeyEvent key) {
@@ -88,8 +97,12 @@ public class Bomber extends Entity implements Disposable {
                 if (bombAmount > 0) {
                     Manager.addEffects(new Bomb((x + 8) / Sprite.SCALED_SIZE, (y + 8) / Sprite.SCALED_SIZE, Sprite.bomb.getFxImage(), this));
                     bombAmount--;
+                    Sound.play("plantBomb");
                 }
             }
+        }
+        if (limiter > f_switch) {
+            Sound.play("moving");
         }
     }
 
@@ -112,6 +125,7 @@ public class Bomber extends Entity implements Disposable {
         img = animator.nextFrame(moving);
         f_switch = 30;
         limiter = 0;
+        Sound.play("oof");
     }
 
     @Override
@@ -127,12 +141,12 @@ public class Bomber extends Entity implements Disposable {
                     return;
                 }
                 if (tmp instanceof Enemy) {
-                    System.out.println("killed");
                     touchedFlame();
                     return;
                 }
                 if (tmp instanceof Item) {
                     ((Item) tmp).getBuff(this);
+                    Sound.play("getBuff");
                 }
             }
             switch (moving) {
@@ -151,12 +165,17 @@ public class Bomber extends Entity implements Disposable {
 
     @Override
     public void touchedFlame() {
-        animateDeath();
+        if (!flamePass) {
+            animateDeath();
+        }
     }
 
     @Override
     public void destroy() {
         Manager.removeEntity(this);
         countBombers--;
+        if (countBombers <= 0) {
+            BombermanGame.endGame();
+        }
     }
 }
