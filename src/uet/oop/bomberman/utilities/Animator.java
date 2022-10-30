@@ -75,9 +75,9 @@ public class Animator {
                 case 3 -> currentAnimation = animateLeft;
                 case 4 -> currentAnimation = animateRight;
                 case 5 -> currentAnimation = destroyed;
-                case 0 -> f_index = 0;
             }
             option = inOption;
+            f_index = 0;
         }
         next = currentAnimation.get(f_index);
         if (inOption == 5 && f_index == currentAnimation.size() - 1) {

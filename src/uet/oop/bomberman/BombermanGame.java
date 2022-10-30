@@ -81,14 +81,13 @@ public class BombermanGame extends Application {
             @Override
             public void handle(long l) {
                 update();
-                render();
                 Manager.cycle();
+                render();
             }
         };
         timer.start();
 
         createMap();
-
         Bomber bomberman = (Bomber) entities.stream().filter(e -> e instanceof Bomber).findFirst().get();
         scene.setOnKeyPressed(bomberman::moveControl);
         scene.setOnKeyReleased(bomberman::OnKeyRelease);
@@ -99,9 +98,10 @@ public class BombermanGame extends Application {
 
     public void createMap() throws IOException {
         Mapper.readMap();
-        entities = Mapper.getMobile();
-        stillObjects = Mapper.getImmobile();
+        entities = Mapper.mobile;
+        stillObjects = Mapper.immobile;
         Physics.updateObjects();
+        Bomber.screensound.play();
     }
 
     public void update() {

@@ -3,25 +3,41 @@ package uet.oop.bomberman.entities;
 import javafx.scene.image.Image;
 import javafx.scene.input.KeyCode;
 import javafx.scene.input.KeyEvent;
+import uet.oop.bomberman.entities.enemies.Enemy;
+import uet.oop.bomberman.entities.immobile.Bomb;
+import uet.oop.bomberman.entities.immobile.Immobile;
+import uet.oop.bomberman.entities.items.Item;
 import uet.oop.bomberman.graphics.Sprite;
 import uet.oop.bomberman.utilities.Animator;
 import uet.oop.bomberman.utilities.Manager;
 import uet.oop.bomberman.utilities.Physics;
+import uet.oop.bomberman.utilities.Sound;
 
+import java.io.File;
 import java.util.ArrayList;
 import java.util.List;
 
-public class Bomber extends Entity {
+public class Bomber extends Entity implements Disposable {
     private Animator animator;
+    private static int countBomber;
     private int speed;
     private int moving;
     private int limiter;
+    private int f_switch;
     private int bombAmount;
     private int bombSize;
+
+    public static Sound bomsound, deadsound, killsound, screensound;
 
     public Bomber(int x, int y, Image img) {
         super(x, y, img);
         init();
+
+        bomsound = new Sound(new File("Sound/bom.wav"));
+        deadsound = new Sound(new File("Sound/dead.wav"));
+        killsound = new Sound(new File("Sound/kill.wav"));
+        screensound = new Sound(new File("Sound/screen.wav"));
+        countBomber++;
     }
     private void init() {
         animator = new Animator();
@@ -40,14 +56,25 @@ public class Bomber extends Entity {
         animator.addAnimateRight(Sprite.player_right.getFxImage());
         animator.addAnimateRight(Sprite.player_right_1.getFxImage());
         animator.addAnimateRight(Sprite.player_right_2.getFxImage());
+
+        animator.addAnimateDestroyed(Sprite.player_dead1.getFxImage());
+        animator.addAnimateDestroyed(Sprite.player_dead2.getFxImage());
+        animator.addAnimateDestroyed(Sprite.player_dead3.getFxImage());
+
+        f_switch = 10;
         moving = 0;
         limiter = 0;
         bombAmount = 1;
-        bombSize = 3;
-        speed = Sprite.SCALED_SIZE / 8;
+        bombSize = 2;
+        speed = 2;
     }
-
-    public void increaseBomb() {
+    public static int getCountBomber() {
+        return countBomber;
+    }
+    public void increaseSpeed() {
+        speed++;
+    }
+    public synchronized void increaseBomb() {
         bombAmount++;
     }
     public int getBombSize() {
@@ -58,34 +85,20 @@ public class Bomber extends Entity {
     }
 
     public void moveControl(KeyEvent key) {
+        if (moving == 5) {
+            return;
+        }
         switch (key.getCode()) {
             case UP -> {
                 moving = 1;
-                if (Physics.detectCollision(this, moving, speed) == null) {
-                    y -= speed;
-                }
+                {Bomber.deadsound.play();}
             }
-            case DOWN -> {
-                moving = 2;
-                if (Physics.detectCollision(this, moving, speed) == null) {
-                    y += speed;
-                }
-            }
-            case LEFT -> {
-                moving = 3;
-                if (Physics.detectCollision(this, moving, speed) == null) {
-                    x -= speed;
-                }
-            }
-            case RIGHT -> {
-                moving = 4;
-                if (Physics.detectCollision(this, moving, speed) == null) {
-                    x += speed;
-                }
-            }
+            case DOWN -> moving = 2;
+            case LEFT -> moving = 3;
+            case RIGHT -> moving = 4;
             case SPACE -> {
                 if (bombAmount > 0) {
-                    Manager.addEffects(new Bomb((x + 5) / Sprite.SCALED_SIZE, (y + 5) / Sprite.SCALED_SIZE, Sprite.bomb.getFxImage(), this));
+                    Manager.addEffects(new Bomb((x + 8) / Sprite.SCALED_SIZE, (y + 8) / Sprite.SCALED_SIZE, Sprite.bomb.getFxImage(), this));
                     bombAmount--;
                 }
             }
@@ -100,15 +113,59 @@ public class Bomber extends Entity {
         }
     }
     private void animate() {
+        f_switch = 10;
         img = animator.nextFrame(moving);
+    }
+
+    private void animateDeath() {
+        moving = 5;
+        img = animator.nextFrame(moving);
+        f_switch = 60;
     }
 
     @Override
     public void update() {
-        if (limiter > 5) {
+        if (moving == 5) {
+            if (animator.isEnd()) {
+                Bomber.deadsound.play();
+                destroy();
+            }
+        } else if (moving != 0 && limiter % 2 == 0) {
+            Entity tmp = Physics.detectCollision(this, moving, speed);
+            if (tmp != null) {
+                if (tmp instanceof Enemy) {
+                    animateDeath();
+                    return;
+                }
+                if (tmp instanceof Immobile) {
+                    return;
+                }
+                if (tmp instanceof Item) {
+                    ((Item) tmp).getBuff(this);
+                }
+            }
+            switch (moving) {
+                case 1 -> y -= speed;
+                case 2 -> y += speed;
+                case 3 -> x -= speed;
+                case 4 -> x += speed;
+            }
+        }
+        if (limiter > f_switch) {
             animate();
             limiter = 0;
         }
         limiter++;
+    }
+
+    @Override
+    public void touchedFlame() {
+        animateDeath();
+    }
+
+    @Override
+    public void destroy() {
+        Manager.removeEntity(this);
+        countBomber--;
     }
 }
