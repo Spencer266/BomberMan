@@ -80,6 +80,10 @@ public class Flame extends Immobile implements Disposable {
 
     private void explode() {
         Entity tmp;
+        tmp = Physics.detectCollision(this, 1, 0);
+        if (tmp instanceof Bomber) {
+            ((Bomber) tmp).touchedFlame();
+        }
         for (int d = 0; d < 4; d++) {
             for (int i = 1; i <= size; i++) {
                 tmp = Physics.detectCollision(this, d + 1, (int) getImgWidth() * i);

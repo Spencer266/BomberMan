@@ -2,12 +2,13 @@ package uet.oop.bomberman.entities.immobile;
 
 import javafx.scene.image.Image;
 import uet.oop.bomberman.entities.Bomber;
+import uet.oop.bomberman.entities.Disposable;
 import uet.oop.bomberman.graphics.Sprite;
 import uet.oop.bomberman.utilities.Animator;
 import uet.oop.bomberman.utilities.Manager;
 import uet.oop.bomberman.utilities.Physics;
 
-public class Bomb extends Immobile {
+public class Bomb extends Immobile implements Disposable {
     private final Bomber planter;
     private Animator animator;
     private int timer;
@@ -43,9 +44,12 @@ public class Bomb extends Immobile {
             }
         }
         if (timer > 200) {
-            Manager.addEntity(new Flame(x / Sprite.SCALED_SIZE, y / Sprite.SCALED_SIZE, Sprite.bomb_exploded.getFxImage(), planter.getBombSize()));
-            planter.increaseBomb();
-            Manager.removeEntity(this);
+            if (!planted) {
+                Manager.removeEffects(this);
+                Manager.addEntity(this);
+            }
+            triggered();
+            destroy();
         }
         if (limiter > 10) {
             animate();
@@ -53,5 +57,21 @@ public class Bomb extends Immobile {
         }
         limiter++;
         timer++;
+    }
+
+    private void triggered() {
+        Manager.addEntity(new Flame(x / Sprite.SCALED_SIZE, y / Sprite.SCALED_SIZE, Sprite.bomb_exploded.getFxImage(), planter.getBombSize()));
+        planter.increaseBomb();
+    }
+
+    @Override
+    public void touchedFlame() {
+        triggered();
+        destroy();
+    }
+
+    @Override
+    public void destroy() {
+        Manager.removeEntity(this);
     }
 }

@@ -17,7 +17,7 @@ import java.util.List;
 
 public class Bomber extends Entity implements Disposable {
     private Animator animator;
-    private static int countBomber;
+    private static int countBombers;
     private int speed;
     private int moving;
     private int limiter;
@@ -28,7 +28,7 @@ public class Bomber extends Entity implements Disposable {
     public Bomber(int x, int y, Image img) {
         super(x, y, img);
         init();
-        countBomber++;
+        countBombers++;
     }
     private void init() {
         animator = new Animator();
@@ -52,15 +52,15 @@ public class Bomber extends Entity implements Disposable {
         animator.addAnimateDestroyed(Sprite.player_dead2.getFxImage());
         animator.addAnimateDestroyed(Sprite.player_dead3.getFxImage());
 
-        f_switch = 10;
+        f_switch = 8;
         moving = 0;
         limiter = 0;
         bombAmount = 1;
         bombSize = 2;
         speed = 4;
     }
-    public static int getCountBomber() {
-        return countBomber;
+    public static int getCountBombers() {
+        return countBombers;
     }
     public void increaseSpeed() {
         speed++;
@@ -97,18 +97,21 @@ public class Bomber extends Entity implements Disposable {
         KeyCode[] keyCodes = {KeyCode.UP, KeyCode.DOWN, KeyCode.LEFT, KeyCode.RIGHT};
         List<KeyCode> keys = new ArrayList<>(List.of(keyCodes));
         if (keys.contains(keyEvent.getCode())) {
+            if (moving == 5) {
+                return;
+            }
             moving = 0;
         }
     }
     private void animate() {
-        f_switch = 10;
         img = animator.nextFrame(moving);
     }
 
     private void animateDeath() {
         moving = 5;
         img = animator.nextFrame(moving);
-        f_switch = 60;
+        f_switch = 30;
+        limiter = 0;
     }
 
     @Override
@@ -120,11 +123,12 @@ public class Bomber extends Entity implements Disposable {
         } else if (moving != 0 && limiter % 2 == 0) {
             Entity tmp = Physics.detectCollision(this, moving, speed);
             if (tmp != null) {
-                if (tmp instanceof Enemy) {
-                    animateDeath();
+                if (tmp instanceof Immobile) {
                     return;
                 }
-                if (tmp instanceof Immobile) {
+                if (tmp instanceof Enemy) {
+                    System.out.println("killed");
+                    touchedFlame();
                     return;
                 }
                 if (tmp instanceof Item) {
@@ -153,6 +157,6 @@ public class Bomber extends Entity implements Disposable {
     @Override
     public void destroy() {
         Manager.removeEntity(this);
-        countBomber--;
+        countBombers--;
     }
 }

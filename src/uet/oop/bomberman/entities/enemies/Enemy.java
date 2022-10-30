@@ -1,6 +1,7 @@
 package uet.oop.bomberman.entities.enemies;
 
 import javafx.scene.image.Image;
+import uet.oop.bomberman.entities.Bomber;
 import uet.oop.bomberman.entities.Disposable;
 import uet.oop.bomberman.entities.Entity;
 import uet.oop.bomberman.utilities.Animator;
@@ -23,7 +24,8 @@ public abstract class Enemy extends Entity implements Disposable {
     abstract void init();
 
     public void moveControl() {
-        if (Physics.detectCollision(this, moving, speed) != null) {
+        Entity tmp = Physics.detectCollision(this, moving, speed);
+        if (tmp != null && !(tmp instanceof Bomber)) {
             return;
         }
         switch (moving) {

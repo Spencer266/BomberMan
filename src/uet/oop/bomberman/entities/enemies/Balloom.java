@@ -50,11 +50,11 @@ public class Balloom extends Enemy {
                 Entity tmp;
                 while ((tmp = Physics.detectCollision(this, moving, speed)) != null) {
                     if (tmp instanceof Bomber) {
-                        continue;
+                        break;
                     }
                     moving = this.randomGenerator.nextInt(4) + 1;
                 }
-                timer = this.randomGenerator.nextInt(200);
+                timer = this.randomGenerator.nextInt(100);
             }
             moveControl();
         }

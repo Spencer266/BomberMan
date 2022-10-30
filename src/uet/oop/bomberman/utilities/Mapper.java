@@ -16,8 +16,7 @@ import java.util.List;
 public class Mapper {
     private static int width;
     private static int height;
-    private static int level;
-    private static String filePath = "F:\\Workstorage\\IntelliJ Projects\\BomberMan\\res\\levels\\map1.txt";
+    private static int level = 2;
 
     public static final List<Entity> effects = new ArrayList<>();
     public static final List<Entity> mobile = new ArrayList<>();
@@ -25,6 +24,7 @@ public class Mapper {
     public static void readMap() throws IOException {
         mobile.clear();
         immobile.clear();
+        String filePath = System.getProperty("user.dir") + "\\res\\levels\\" + String.format("map%d.txt", level);
         FileReader file = new FileReader(filePath);
         BufferedReader buffer = new BufferedReader(file);
 
@@ -64,5 +64,6 @@ public class Mapper {
             }
             row++;
         }
+        level++;
     }
 }
