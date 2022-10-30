@@ -37,6 +37,7 @@ public class Balloom extends Enemy {
         limiter = 0;
         speed = Sprite.SCALED_SIZE / 24;
         timer = randomGenerator.nextInt(200);
+        killPoints = 500;
     }
 
     @Override
@@ -66,10 +67,5 @@ public class Balloom extends Enemy {
         }
         limiter++;
         timer++;
-    }
-
-    @Override
-    public void touchedFlame() {
-        animateDeath();
     }
 }

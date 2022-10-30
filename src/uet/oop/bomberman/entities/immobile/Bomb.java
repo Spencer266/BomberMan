@@ -44,7 +44,7 @@ public class Bomb extends Immobile implements Disposable {
                 Manager.addEntity(this);
             }
         }
-        if (timer > 200) {
+        if (timer > 150) {
             if (!planted) {
                 Manager.removeEffects(this);
                 Manager.addEntity(this);
@@ -68,7 +68,7 @@ public class Bomb extends Immobile implements Disposable {
 
     @Override
     public void touchedFlame() {
-        timer = 190;
+        timer = 145;
     }
 
     @Override

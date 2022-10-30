@@ -8,6 +8,7 @@ import uet.oop.bomberman.entities.enemies.Enemy;
 import uet.oop.bomberman.entities.immobile.Bomb;
 import uet.oop.bomberman.entities.immobile.Immobile;
 import uet.oop.bomberman.entities.items.Item;
+import uet.oop.bomberman.entities.items.Portal;
 import uet.oop.bomberman.graphics.Sprite;
 import uet.oop.bomberman.utilities.Animator;
 import uet.oop.bomberman.utilities.Manager;
@@ -20,7 +21,8 @@ import java.util.List;
 public class Bomber extends Entity implements Disposable {
     private Animator animator;
     private static int countBombers = 0;
-    private int speed;
+    private static int score = 0;
+    private double speed;
     private int moving;
     private int limiter;
     private int f_switch;
@@ -59,14 +61,20 @@ public class Bomber extends Entity implements Disposable {
         moving = 0;
         limiter = 0;
         bombAmount = 1;
-        bombSize = 2;
-        speed = 4;
+        bombSize = 1;
+        speed = 3;
         flamePass = false;
     }
     public static int getCountBombers() {
         return countBombers;
     }
     public static void resetCountBombers() { countBombers = 0; }
+    public static int getScore() {
+        return score;
+    }
+    public static void addScore(int points) {
+        Bomber.score += points;
+    }
 
     public void increaseSpeed() {
         speed++;
@@ -121,11 +129,11 @@ public class Bomber extends Entity implements Disposable {
     }
 
     private void animateDeath() {
+        Sound.play("oof");
         moving = 5;
         img = animator.nextFrame(moving);
         f_switch = 30;
         limiter = 0;
-        Sound.play("oof");
     }
 
     @Override
@@ -134,19 +142,21 @@ public class Bomber extends Entity implements Disposable {
             if (animator.isEnd()) {
                 destroy();
             }
-        } else if (moving != 0 && limiter % 2 == 0) {
+        } else if (limiter % 2 == 0) {
             Entity tmp = Physics.detectCollision(this, moving, speed);
             if (tmp != null) {
                 if (tmp instanceof Immobile) {
                     return;
                 }
                 if (tmp instanceof Enemy) {
-                    touchedFlame();
+                    animateDeath();
                     return;
                 }
                 if (tmp instanceof Item) {
                     ((Item) tmp).getBuff(this);
-                    Sound.play("getBuff");
+                    if (!(tmp instanceof Portal)) {
+                        Sound.play("getBuff");
+                    }
                 }
             }
             switch (moving) {

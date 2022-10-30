@@ -15,9 +15,9 @@ public class Physics {
         still.addAll(BombermanGame.getStillObjects());
         still.addAll(BombermanGame.getEntities());
     }
-    public static Entity detectCollision(Entity entity, int direction, int speed) {
-        int curX = entity.getX();
-        int curY = entity.getY();
+    public static Entity detectCollision(Entity entity, int direction, double speed) {
+        float curX = entity.getX();
+        float curY = entity.getY();
 
         switch (direction) {
             case 1 -> curY -= speed;
@@ -29,7 +29,7 @@ public class Physics {
             if (e instanceof Grass || e == entity) {
                 continue;
             }
-            if (Math.abs(curX - e.getX()) < entity.getImgWidth() && Math.abs(curY - e.getY()) < Sprite.SCALED_SIZE-1) {
+            if (Math.abs(curX - e.getX()) < entity.getImgWidth() && Math.abs(curY - e.getY()) < Sprite.SCALED_SIZE-1.5) {
                 return e;
             }
         }

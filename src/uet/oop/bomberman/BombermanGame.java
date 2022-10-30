@@ -37,9 +37,14 @@ public class BombermanGame extends Application {
     private static GraphicsContext gc;
     private static Canvas canvas;
     private static AnimationTimer timer;
-
+    private static GraphicsContext infoGc;
+    private static Canvas info;
 
     private static Bomber bomberman;
+    public static Bomber getBomberman() {
+        return bomberman;
+    }
+
     private static List<Entity> entities = new ArrayList<>();
     public static List<Entity> getEntities() {
         return entities;
@@ -59,7 +64,7 @@ public class BombermanGame extends Application {
         stillObjects.removeAll(lo);
     }
 
-    private static List<Entity> effects = new ArrayList<>();
+    private static final List<Entity> effects = new ArrayList<>();
     public static void addEffects(List<Entity> le) {
         effects.addAll(le);
     }
@@ -74,11 +79,22 @@ public class BombermanGame extends Application {
     @Override
     public void start(Stage stage) {
         // Tao Canvas
+        info = new Canvas(Sprite.SCALED_SIZE * WIDTH, 30);
+        infoGc = info.getGraphicsContext2D();
+        infoGc.setTextAlign(TextAlignment.CENTER);
+        infoGc.setTextBaseline(VPos.CENTER);
+        infoGc.setFont(Font.font("Verdana", FontWeight.BOLD, 12));
+
         canvas = new Canvas(Sprite.SCALED_SIZE * WIDTH, Sprite.SCALED_SIZE * HEIGHT);
+        canvas.setLayoutY(30);
         gc = canvas.getGraphicsContext2D();
+        gc.setTextAlign(TextAlignment.CENTER);
+        gc.setTextBaseline(VPos.CENTER);
+        gc.setFont(Font.font("Verdana", FontWeight.BOLD, 30));
 
         // Tao root container
         Group root = new Group();
+        root.getChildren().add(info);
         root.getChildren().add(canvas);
 
         // Tao scene
@@ -130,26 +146,27 @@ public class BombermanGame extends Application {
     }
 
     public void render() {
+        infoGc.clearRect(0, 0, info.getWidth(), info.getHeight());
+        infoGc.setFill(Color.BLACK);
+        infoGc.fillRect(0, 0, info.getWidth(), info.getHeight());
+        infoGc.setFill(Color.WHITE);
+        infoGc.fillText("Score: " + Bomber.getScore(), info.getWidth() / 2, info.getHeight() / 2);
         if (!gameOver) {
             gc.clearRect(0, 0, canvas.getWidth(), canvas.getHeight());
             stillObjects.forEach(g -> g.render(gc));
             effects.forEach(e -> e.render(gc));
             entities.forEach(g -> g.render(gc));
-        }
-        else {
+        } else {
             gc.setFill(Color.BLACK);
             gc.fillRect(0, 0, canvas.getWidth(), canvas.getHeight());
             gc.setFill(Color.WHITE);
-            gc.setTextAlign(TextAlignment.CENTER);
-            gc.setTextBaseline(VPos.CENTER);
-            gc.fillText("Game Over", canvas.getWidth() / 2, canvas.getHeight() / 2);
+            gc.fillText("Game Over", canvas.getWidth() / 2, canvas.getHeight() / 2 + 10);
         }
     }
 
     public static void endGame() {
         //timer.stop();
         gameOver = true;
-        gc.setFont(Font.font("Verdana", FontWeight.BOLD, 30));
         bgmPlaying = false;
         Sound.play("gameOver");
     }

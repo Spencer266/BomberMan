@@ -5,20 +5,20 @@ import javafx.scene.image.Image;
 import uet.oop.bomberman.graphics.Sprite;
 
 public abstract class Entity {
-    public int getX() {
+    public float getX() {
         return x;
     }
 
-    public int getY() {
+    public float getY() {
         return y;
     }
 
     public double getImgWidth() {
         return img.getWidth();
     }
+
     //Tọa độ X tính từ góc trái trên trong Canvas
     protected int x;
-
     //Tọa độ Y tính từ góc trái trên trong Canvas
     protected int y;
 
