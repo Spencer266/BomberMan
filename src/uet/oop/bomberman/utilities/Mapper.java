@@ -2,6 +2,7 @@ package uet.oop.bomberman.utilities;
 
 import uet.oop.bomberman.entities.*;
 import uet.oop.bomberman.entities.enemies.Balloom;
+import uet.oop.bomberman.entities.enemies.Kondoria;
 import uet.oop.bomberman.entities.enemies.Oneal;
 import uet.oop.bomberman.entities.immobile.Brick;
 import uet.oop.bomberman.entities.immobile.Wall;
@@ -55,6 +56,10 @@ public class Mapper {
                         case '2' -> {
                             object = new Grass(i, row, Sprite.grass.getFxImage());
                             mobile.add(new Oneal(i, row, Sprite.oneal_right1.getFxImage()));
+                        }
+                        case '3' -> {
+                            object = new Grass(i, row, Sprite.grass.getFxImage());
+                            mobile.add(new Kondoria(i, row, Sprite.kondoria_right1.getFxImage()));
                         }
                         case 'f' -> {
                             FlameItem flameItem = new FlameItem(i, row, Sprite.powerup_flames.getFxImage());

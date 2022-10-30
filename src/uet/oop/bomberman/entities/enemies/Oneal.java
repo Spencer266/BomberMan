@@ -41,6 +41,7 @@ public class Oneal extends Enemy {
         limiter = 0;
         speed = randomGenerator.nextInt(1, 2);
         timer = randomGenerator.nextInt(20);
+        killPoints = 700;
     }
 
     @Override

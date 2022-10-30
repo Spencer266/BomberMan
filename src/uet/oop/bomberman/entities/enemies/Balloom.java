@@ -33,10 +33,11 @@ public class Balloom extends Enemy {
         animator.addAnimateDestroyed(Sprite.mob_dead2.getFxImage());
         animator.addAnimateDestroyed(Sprite.mob_dead3.getFxImage());
 
+
         moving = 4;
         limiter = 0;
         speed = Sprite.SCALED_SIZE / 24;
-        timer = randomGenerator.nextInt(200);
+        timer = randomGenerator.nextInt(100);
         killPoints = 500;
     }
 

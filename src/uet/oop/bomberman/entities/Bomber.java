@@ -109,9 +109,6 @@ public class Bomber extends Entity implements Disposable {
                 }
             }
         }
-        if (limiter > f_switch) {
-            Sound.play("moving");
-        }
     }
 
     public void OnKeyRelease(KeyEvent keyEvent) {
@@ -164,6 +161,9 @@ public class Bomber extends Entity implements Disposable {
                 case 2 -> y += speed;
                 case 3 -> x -= speed;
                 case 4 -> x += speed;
+            }
+            if (limiter > f_switch && moving != 0) {
+                Sound.play("moving");
             }
         }
         if (limiter > f_switch) {
